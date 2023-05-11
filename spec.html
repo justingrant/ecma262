@@ -32163,7 +32163,7 @@
         </p>
         <p>
           Implementations that follow the requirements for time zones as described in the ECMA-402 Internationalization API specification are called <dfn>time zone aware</dfn>.
-          Time zone aware implementations must define built-in named time zones corresponding to the Zone and Link names of the IANA Time Zone Database (and <strong>only</strong> such names) and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations as specified in the ECMA-402 specification.
+          Time zone aware implementations must define built-in named time zones corresponding to the Zone and Link names of the IANA Time Zone Database (and <b>only</b> such names) and use best available current and historical information about their offsets from UTC and their daylight saving time rules in calculations as specified in the ECMA-402 specification.
           An ECMAScript implementation that includes the ECMA-402 Internationalization API <b>must</b> be time zone aware.
           However, it is recommended that all ECMAScript implementations be time zone aware, including those that do not implement the ECMA-402 Internationalization API.
           Furthermore, even non-time zone aware implementations that do not support the entire IANA Time Zone Database are still recommended to use IANA Time Zone Database names as identifiers to represent time zones.
@@ -32272,7 +32272,7 @@
         </p>
         <emu-alg>
           1. If the implementation does not include local political rules for any time zones, then
-            1. Return a new List containing only one element: the Time Zone Identifier Record { [[Identifier]]: *"UTC"*, [[PrimaryIdentifier]]: *"UTC"* }.
+            1. Return « the Time Zone Identifier Record { [[Identifier]]: *"UTC"*, [[PrimaryIdentifier]]: *"UTC"* } ».
           1. Let _identifiers_ be the List of String values representing time zones supported by the implementation.
           1. [declared="comparefn"] Sort _identifiers_ into the same order as if an Array of the same values had been sorted using %Array.prototype.sort% with *undefined* as _comparefn_.
           1. Let _result_ be a new empty List.
@@ -32301,7 +32301,7 @@
           1. If the implementation only supports the UTC time zone, return *"UTC"*.
           1. Let _systemTimeZoneString_ be the String representing the host environment's current time zone, either a time zone identifier or a UTC offset string.
           1. If IsTimeZoneOffsetString(_systemTimeZoneString_) is *true*, return _systemTimeZoneString_.
-          1. Assert: _systemTimeZoneString_ is equal to the [[PrimaryIdentifier]] property of at least one Time Zone Identifier Record returned by AvailableTimeZoneIdentifiers().
+          1. Assert: _systemTimeZoneString_ is the value of the [[PrimaryIdentifier]] field of at least one Time Zone Identifier Record returned by AvailableTimeZoneIdentifiers().
           1. Return _systemTimeZoneString_.
         </emu-alg>
 
