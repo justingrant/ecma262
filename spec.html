@@ -32599,7 +32599,7 @@
                 `Z`
               </td>
               <td>
-                is the UTC offset representation specified as *"Z"* (for UTC with no offset) or as either *"+"* or *"-"* followed by a time expression `HH:mm` (a subset of the <emu-xref href="#sec-time-zone-offset-strings">time zone offset string format</emu-xref> for indicating local time ahead of or behind UTC, respectively)
+                is the UTC offset representation specified as *"Z"* (for UTC with no offset) or satisfying the |DateUTCOffset| production (for local time ahead of or behind UTC).
               </td>
             </tr>
           </table>
@@ -32666,11 +32666,25 @@ THH:mm:ss.sss
       </emu-clause>
 
       <emu-clause id="sec-time-zone-offset-strings">
-        <h1>Time Zone Offset String Format</h1>
+        <h1>Time Zone Offset String Formats</h1>
 
         <p>
-          ECMAScript defines a string interchange format for UTC offsets, derived from ISO 8601.
-          The format is described by the following grammar.
+          ECMAScript defines string interchange formats for UTC offsets, derived from ISO 8601.
+        </p>
+        <p>
+          |UTCOffset| defines a permissive and interoperable format that is suitable for validating UTC offset inputs from ECMAScript programs or host environments.
+          Methods or abstract operations that accept a time zone identifier input must also accept a |UTCOffset|, except methods or abstract operations that are intentionally limited to accepting named time zone identifiers.
+        </p>
+        <p>
+          |NormalizedUTCOffset| defines a subset of |UTCOffset| that is unambiguous: for every integer returned from ParseTimeZoneOffsetString, there is one and only one corresponding |NormalizedUTCOffset|.
+          This format always includes a sign, hours, and minutes, but avoids trailing zeroes in the second and subsecond units.
+          Except when overridden by caller-provided options, this format must be used when returning UTC offset Strings or offset time zone identifiers to ECMAScript code.
+        </p>
+        <p>
+          |DateUTCOffset| defines the minimum subset of |NormalizedUTCOffset| that is required to be recognized and interpreted by the Date.parse built-in method.
+        </p>
+        <p>
+          These formats are described by the following grammar.
           The usage of Unicode code points in this grammar is listed in <emu-xref href="#table-time-zone-offset-string-code-points"></emu-xref>.
         </p>
 
@@ -32708,6 +32722,14 @@ THH:mm:ss.sss
             TemporalSign Hour HourSubcomponents[+Extended]
             TemporalSign Hour HourSubcomponents[~Extended]
 
+          NormalizedUTCOffset :::
+            DateUTCOffset
+            ASCIISign Hour `:` MinuteSecond `:` NonZeroSecond
+            ASCIISign Hour `:` MinuteSecond `:` MinuteSecond `:` NormalizedTemporalDecimalFraction
+
+          DateUTCOffset :::
+            ASCIISign Hour `:` MinuteSecond
+
           TemporalSign :::
             ASCIISign
             &lt;MINUS&gt;
@@ -32739,6 +32761,14 @@ THH:mm:ss.sss
             `4` DecimalDigit
             `5` DecimalDigit
 
+          NonZeroSecond :::
+            `0` NonZeroDigit
+            `1` DecimalDigit
+            `2` DecimalDigit
+            `3` DecimalDigit
+            `4` DecimalDigit
+            `5` DecimalDigit
+
           TemporalDecimalFraction :::
             TemporalDecimalSeparator DecimalDigit
             TemporalDecimalSeparator DecimalDigit DecimalDigit
@@ -32749,6 +32779,17 @@ THH:mm:ss.sss
             TemporalDecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
             TemporalDecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
             TemporalDecimalSeparator DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit
+
+          NormalizedTemporalDecimalFraction :::
+            `.` NonZeroDigit
+            `.` DecimalDigit NonZeroDigit
+            `.` DecimalDigit DecimalDigit NonZeroDigit
+            `.` DecimalDigit DecimalDigit DecimalDigit NonZeroDigit
+            `.` DecimalDigit DecimalDigit DecimalDigit DecimalDigit NonZeroDigit
+            `.` DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit NonZeroDigit
+            `.` DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit NonZeroDigit
+            `.` DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit NonZeroDigit
+            `.` DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit DecimalDigit NonZeroDigit
 
           TemporalDecimalSeparator ::: one of
             `.` `,`
@@ -47747,7 +47788,9 @@ THH:mm:ss.sss
   </emu-annex>
 
   <emu-annex id="sec-time-zone-offset-string-format">
-    <h1>Time Zone Offset String Format</h1>
+    <h1>Time Zone Offset String Formats</h1>
+    <emu-prodref name="NormalizedUTCOffset"></emu-prodref>
+    <emu-prodref name="DateUTCOffset"></emu-prodref>
     <emu-prodref name="UTCOffset"></emu-prodref>
     <emu-prodref name="TemporalSign"></emu-prodref>
     <emu-prodref name="ASCIISign"></emu-prodref>
@@ -47755,7 +47798,9 @@ THH:mm:ss.sss
     <emu-prodref name="HourSubcomponents"></emu-prodref>
     <emu-prodref name="TimeSeparator"></emu-prodref>
     <emu-prodref name="MinuteSecond"></emu-prodref>
+    <emu-prodref name="NonZeroSecond"></emu-prodref>
     <emu-prodref name="TemporalDecimalFraction"></emu-prodref>
+    <emu-prodref name="NormalizedTemporalDecimalFraction"></emu-prodref>
     <emu-prodref name="TemporalDecimalSeparator"></emu-prodref>
   </emu-annex>
 
